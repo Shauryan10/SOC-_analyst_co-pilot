@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L1 — Security Event Ingestion</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>SECURITY EVENT INGESTION</h1>
+      <p class="subtitle">L1 — Event Collection &amp; Normalization</p>
+    </header>
+
+    <main id="upload-section">
+      <section class="card">
+        <h2>Upload security log</h2>
+        <div class="upload-area" id="drop-zone">
+          <input type="file" id="file-input" accept=".csv,.json,.jsonl,.log,.txt" multiple hidden>
+          <button type="button" class="btn btn-primary" id="choose-file-btn">Choose Files</button>
+          <p class="hint">Supported: CSV | JSON | JSONL | LOG | TXT</p>
+        </div>
+        
+        <div id="selected-files-container" hidden>
+            <h3>Selected Files</h3>
+            <ul id="selected-files-list"></ul>
+            <button type="button" class="btn btn-primary" id="process-files-btn">Process Incident</button>
+        </div>
+
+        <div class="source-select" id="source-select" hidden>
+          <p>Source detection uncertain — select platform:</p>
+          <div class="source-buttons">
+            <button type="button" class="btn btn-source" data-source="wazuh">Wazuh</button>
+            <button type="button" class="btn btn-source" data-source="suricata">Suricata</button>
+            <button type="button" class="btn btn-source" data-source="firewall">Firewall</button>
+            <button type="button" class="btn btn-source" data-source="generic">Generic</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Or paste single event</h2>
+        <textarea id="paste-input" rows="6" placeholder='Paste JSON event or log line here...'></textarea>
+        <button type="button" class="btn btn-secondary" id="paste-btn">Normalize Event</button>
+      </section>
+    </main>
+
+      <section class="card results" id="results-section" hidden>
+      <h2>INCIDENT INGESTION COMPLETE</h2>
+      <div id="sources-summary-list"></div>
+      
+      <h3>Overall Statistics</h3>
+      <div class="stats-grid">
+        <div class="stat">
+          <span class="stat-label">Total Events</span>
+          <span class="stat-value" id="result-total">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Successfully Normalized</span>
+          <span class="stat-value success" id="result-success">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Failed</span>
+          <span class="stat-value error" id="result-failed">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Duplicates Removed</span>
+          <span class="stat-value" id="result-duplicates">—</span>
+        </div>
+      </div>
+      
+      <h3>File Breakdown</h3>
+      <div id="files-breakdown-list"></div>
+
+      <div class="status-banner" id="status-banner">
+        <span class="status-icon">✓</span>
+        <span id="status-text">Normalization completed</span>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="view-events-btn">View Events</button>
+        <button type="button" class="btn btn-secondary" id="download-json-btn">Download Normalized JSON</button>
+        <button type="button" class="btn btn-secondary" id="download-report-btn">Download Report</button>
+        <button type="button" class="btn btn-outline" id="new-upload-btn">Upload Another</button>
+      </div>
+    </section>
+
+    <section class="card events-view" id="events-view" hidden>
+      <h2>Normalized Events <span id="events-count"></span></h2>
+      <pre id="events-preview"></pre>
+      <button type="button" class="btn btn-outline" id="close-events-btn">Close</button>
+    </section>
+
+    <div class="loading" id="loading" hidden style="display:none">
+      <div class="spinner"></div>
+      <p>Processing events locally...</p>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

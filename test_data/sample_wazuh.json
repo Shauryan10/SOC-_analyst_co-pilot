@@ -1,0 +1,79 @@
+[
+  {
+    "id": "wazuh-001",
+    "timestamp": "2026-08-18T08:15:22.000Z",
+    "rule": {
+      "level": 10,
+      "description": "SSH authentication failed",
+      "id": "5710",
+      "groups": ["authentication_failed", "sshd"]
+    },
+    "agent": {
+      "id": "001",
+      "name": "web-server-01"
+    },
+    "manager": {
+      "name": "wazuh-manager"
+    },
+    "data": {
+      "srcip": "203.0.113.45",
+      "dstuser": "admin",
+      "protocol": "tcp"
+    },
+    "full_log": "Failed password for admin from 203.0.113.45 port 54321 ssh2"
+  },
+  {
+    "id": "wazuh-002",
+    "timestamp": "2026-08-18T08:16:01.000Z",
+    "rule": {
+      "level": 7,
+      "description": "File added to the system",
+      "groups": ["syscheck"]
+    },
+    "agent": {
+      "id": "002",
+      "name": "db-server-01"
+    },
+    "manager": {
+      "name": "wazuh-manager"
+    },
+    "data": {
+      "file": "/etc/cron.d/suspicious",
+      "process": "cron"
+    },
+    "full_log": "File /etc/cron.d/suspicious added"
+  },
+  {
+    "id": "wazuh-003",
+    "timestamp": "2026-08-18T08:15:22.000Z",
+    "rule": {
+      "level": 10,
+      "description": "SSH authentication failed",
+      "groups": ["authentication_failed"]
+    },
+    "agent": {
+      "id": "001",
+      "name": "web-server-01"
+    },
+    "data": {
+      "srcip": "203.0.113.45",
+      "dstuser": "admin"
+    },
+    "full_log": "Failed password for admin from 203.0.113.45 port 54321 ssh2"
+  },
+  {
+    "timestamp": "2026-08-18T09:00:00.000Z",
+    "rule": {
+      "level": 5,
+      "description": "Missing agent name"
+    },
+    "agent": {},
+    "data": {},
+    "full_log": "Event with minimal fields"
+  },
+  {
+    "id": "wazuh-bad",
+    "rule": {},
+    "data": {}
+  }
+]
