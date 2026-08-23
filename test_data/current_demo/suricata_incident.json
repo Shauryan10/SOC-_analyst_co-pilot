@@ -1,0 +1,90 @@
+[
+  {
+    "timestamp": "2023-10-27T10:00:01Z",
+    "event_type": "alert",
+    "src_ip": "185.20.10.1",
+    "src_port": 48992,
+    "dest_ip": "10.0.0.5",
+    "dest_port": 22,
+    "proto": "TCP",
+    "alert": {
+      "action": "allowed",
+      "signature_id": 2010935,
+      "category": "Attempted Administrator Privilege Gain",
+      "severity": 2,
+      "signature": "ET SCAN Suspicious inbound SSH connection attempt from known C2"
+    },
+    "flow_id": "suricata-flow-001"
+  },
+  {
+    "timestamp": "2023-10-27T10:05:12Z",
+    "event_type": "alert",
+    "src_ip": "185.20.10.1",
+    "src_port": 49001,
+    "dest_ip": "10.0.0.5",
+    "dest_port": 22,
+    "proto": "TCP",
+    "alert": {
+      "action": "allowed",
+      "signature_id": 2010937,
+      "category": "Successful Administrator Privilege Gain",
+      "severity": 1,
+      "signature": "ET POLICY SSH successful login from known external threat IP"
+    },
+    "flow_id": "suricata-flow-002"
+  },
+  {
+    "timestamp": "2023-10-27T10:08:16Z",
+    "event_type": "alert",
+    "src_ip": "10.0.0.5",
+    "src_port": 54321,
+    "dest_ip": "93.184.216.34",
+    "dest_port": 80,
+    "proto": "TCP",
+    "alert": {
+      "action": "allowed",
+      "signature_id": 2024363,
+      "category": "A Network Trojan was detected",
+      "severity": 1,
+      "signature": "ET MALWARE Known Emotet malicious.com domain resolution and payload download"
+    },
+    "flow_id": "suricata-flow-003",
+    "message": "Detected malware download from malicious.com"
+  },
+  {
+    "timestamp": "2023-10-27T10:08:16Z",
+    "event_type": "alert",
+    "src_ip": "10.0.0.5",
+    "src_port": 54321,
+    "dest_ip": "93.184.216.34",
+    "dest_port": 80,
+    "proto": "TCP",
+    "alert": {
+      "action": "allowed",
+      "signature_id": 2024363,
+      "category": "A Network Trojan was detected",
+      "severity": 1,
+      "signature": "ET MALWARE Known Emotet malicious.com domain resolution and payload download"
+    },
+    "flow_id": "suricata-flow-003",
+    "message": "Detected malware download from malicious.com"
+  },
+  {
+    "timestamp": "2023-10-27T10:10:05Z",
+    "event_type": "alert",
+    "src_ip": "10.0.0.5",
+    "src_port": 55111,
+    "dest_ip": "185.20.10.1",
+    "dest_port": 443,
+    "proto": "TCP",
+    "alert": {
+      "action": "allowed",
+      "signature_id": 2023001,
+      "category": "C2 Communication",
+      "severity": 1,
+      "signature": "ET CNC APT29 beaconing behavior detected"
+    },
+    "flow_id": "suricata-flow-004",
+    "message": "Beaconing to 185.20.10.1"
+  }
+]

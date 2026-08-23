@@ -8,10 +8,11 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from l1.api.ingestion_routes import router as l1_router
+from l2.api.enrichment_routes import router as l2_router
 
 app = FastAPI(
-    title="Cyber Defense Harness — L1",
-    description="Event Collection & Normalization module",
+    title="Cyber Defense Harness — L1 & L2",
+    description="Event Collection, Normalization & Enrichment modules",
     version="1.0.0",
 )
 
@@ -24,6 +25,7 @@ app.add_middleware(
 )
 
 app.include_router(l1_router)
+app.include_router(l2_router)
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 if FRONTEND_DIR.exists():

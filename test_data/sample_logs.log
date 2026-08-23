@@ -1,8 +1,0 @@
-Aug 18 08:15:22 wazuh-manager wazuh: {"timestamp":"2026-08-18T08:15:22.000Z","rule":{"level":10,"description":"SSH authentication failed"},"agent":{"name":"web-server-01"},"data":{"srcip":"203.0.113.45"},"full_log":"Failed password for admin from 203.0.113.45"}
-Aug 18 10:30:15 suricata suricata: {"timestamp":"2026-08-18T10:30:15.000Z","event_type":"alert","src_ip":"192.168.1.100","dest_ip":"10.0.0.50","proto":"TCP","alert":{"signature":"ET POLICY SSL/TLS Certificate Observed","severity":2}}
-Aug 18 12:00:01 pfSense filterlog: block,WAN,in,4,6,0,64,203.0.113.88,192.168.1.1,45678,22
-Aug 18 12:00:05 pfSense filterlog: pass,LAN,out,4,17,0,128,192.168.1.50,8.8.8.8,53124,53
-Aug 18 12:00:01 pfSense filterlog: block,WAN,in,4,6,0,64,203.0.113.88,192.168.1.1,45678,22
-Aug 18 14:00:00 generic-host app: action=deny src_ip=10.1.1.99 dst_ip=10.1.1.1 protocol=tcp message="Unauthorized access attempt"
-this is not a valid log line at all
-Aug 18 15:00:00 pfSense filterlog: pass,LAN,out,4,6,0,512,192.168.1.100,10.0.0.5,443,8443

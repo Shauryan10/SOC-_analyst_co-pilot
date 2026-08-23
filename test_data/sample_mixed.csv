@@ -1,7 +1,0 @@
-timestamp,event_type,src_ip,dst_ip,src_port,dst_port,severity,message,source_platform_hint
-2026-08-18T08:15:22.000Z,authentication_failed,203.0.113.45,192.168.1.10,54321,22,10,SSH auth failed,wazuh
-2026-08-18T10:30:15.000Z,alert,192.168.1.100,10.0.0.50,49152,443,2,SSL cert observed,suricata
-2026-08-18T12:00:01Z,firewall_block,203.0.113.88,192.168.1.1,45678,22,5,Default deny,firewall
-2026-08-18T14:00:00Z,generic_event,10.1.1.5,10.1.1.1,8080,80,3,Web request,
-2026-08-18T08:15:22.000Z,authentication_failed,203.0.113.45,192.168.1.10,54321,22,10,SSH auth failed,wazuh
-2026-08-18T15:00:00Z,,172.16.0.1,,,,,Missing fields event,
