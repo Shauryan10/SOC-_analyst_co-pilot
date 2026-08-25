@@ -46,6 +46,75 @@
     "id": "wazuh-event-002"
   },
   {
+    "timestamp": "2023-10-27T10:00:08Z",
+    "rule": {
+      "level": 7,
+      "description": "sshd: Failed login for user admin (brute force attempt)",
+      "groups": ["authentication", "syslog"]
+    },
+    "agent": {
+      "name": "web-prod-01",
+      "id": "001"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "dstip": "10.0.0.5",
+      "user": "admin",
+      "protocol": "TCP",
+      "srcport": "48998",
+      "dstport": "22",
+      "action": "failed"
+    },
+    "full_log": "Oct 27 10:00:08 web-prod-01 sshd[1236]: Failed password for admin from 185.20.10.1 port 48998 ssh2",
+    "id": "wazuh-event-002a"
+  },
+  {
+    "timestamp": "2023-10-27T10:00:12Z",
+    "rule": {
+      "level": 7,
+      "description": "sshd: Failed login for user admin (brute force attempt)",
+      "groups": ["authentication", "syslog"]
+    },
+    "agent": {
+      "name": "web-prod-01",
+      "id": "001"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "dstip": "10.0.0.5",
+      "user": "admin",
+      "protocol": "TCP",
+      "srcport": "49001",
+      "dstport": "22",
+      "action": "failed"
+    },
+    "full_log": "Oct 27 10:00:12 web-prod-01 sshd[1237]: Failed password for admin from 185.20.10.1 port 49001 ssh2",
+    "id": "wazuh-event-002b"
+  },
+  {
+    "timestamp": "2023-10-27T10:00:15Z",
+    "rule": {
+      "level": 7,
+      "description": "sshd: Failed login for user admin (brute force attempt)",
+      "groups": ["authentication", "syslog"]
+    },
+    "agent": {
+      "name": "web-prod-01",
+      "id": "001"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "dstip": "10.0.0.5",
+      "user": "admin",
+      "protocol": "TCP",
+      "srcport": "49004",
+      "dstport": "22",
+      "action": "failed"
+    },
+    "full_log": "Oct 27 10:00:15 web-prod-01 sshd[1238]: Failed password for admin from 185.20.10.1 port 49004 ssh2",
+    "id": "wazuh-event-002c"
+  },
+  {
     "timestamp": "2023-10-27T10:05:12Z",
     "rule": {
       "level": 3,
@@ -61,33 +130,12 @@
       "dstip": "10.0.0.5",
       "user": "admin",
       "protocol": "TCP",
-      "srcport": "49001",
+      "srcport": "49008",
       "dstport": "22",
       "action": "success"
     },
-    "full_log": "Oct 27 10:05:12 web-prod-01 sshd[1300]: Accepted password for admin from 185.20.10.1 port 49001 ssh2",
+    "full_log": "Oct 27 10:05:12 web-prod-01 sshd[1300]: Accepted password for admin from 185.20.10.1 port 49008 ssh2",
     "id": "wazuh-event-003"
-  },
-  {
-    "timestamp": "2023-10-27T10:06:00Z",
-    "rule": {
-      "level": 12,
-      "description": "sudo: User admin executed command as root",
-      "groups": ["privilege_escalation", "syslog"]
-    },
-    "agent": {
-      "name": "web-prod-01",
-      "id": "001"
-    },
-    "data": {
-      "srcip": "185.20.10.1",
-      "dstip": "10.0.0.5",
-      "user": "admin",
-      "process": "sudo",
-      "action": "privilege escalation"
-    },
-    "full_log": "Oct 27 10:06:00 web-prod-01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/bin/bash",
-    "id": "wazuh-event-004"
   },
   {
     "timestamp": "2023-10-27T10:06:00Z",

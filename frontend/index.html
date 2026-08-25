@@ -82,6 +82,8 @@
         <button type="button" class="btn btn-primary" id="view-events-btn">View Events</button>
         <button type="button" class="btn btn-secondary" id="download-json-btn">Download Normalized JSON</button>
         <button type="button" class="btn btn-secondary" id="download-report-btn">Download Report</button>
+        <button type="button" class="btn btn-primary" id="view-assessment-btn" style="background-color: #6a1b9a;">View Security Assessment</button>
+        <button type="button" class="btn btn-secondary" id="download-assessment-btn" style="border-color: #6a1b9a; color: #6a1b9a;">Download Security Assessment</button>
         <button type="button" class="btn btn-outline" id="new-upload-btn">Upload Another</button>
       </div>
     </section>
@@ -90,6 +92,12 @@
       <h2>Normalized Events <span id="events-count"></span></h2>
       <pre id="events-preview"></pre>
       <button type="button" class="btn btn-outline" id="close-events-btn">Close</button>
+    </section>
+
+    <section class="card events-view" id="assessment-view" hidden>
+      <h2>Security Assessment</h2>
+      <pre id="assessment-preview"></pre>
+      <button type="button" class="btn btn-outline" id="close-assessment-btn">Close</button>
     </section>
 
     <div class="loading" id="loading" hidden style="display:none">

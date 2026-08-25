@@ -235,14 +235,108 @@ $("#download-report-btn").addEventListener("click", () => {
   }
 });
 
+let currentAssessmentResult = null;
+
+async function generateSecurityAssessment() {
+  if (currentAssessmentResult) {
+    return currentAssessmentResult;
+  }
+  
+  if (!currentSessionId) {
+    throw new Error("No active session to assess.");
+  }
+  
+  showLoading(true);
+  $("#loading").querySelector("p").textContent = "Generating security assessment...";
+  
+  try {
+    // 1. Get raw normalized events
+    const evRes = await fetch(`${API}/events/${currentSessionId}?limit=10000`);
+    const evData = await evRes.json();
+    if (!evRes.ok) throw new Error(evData.detail || "Failed to fetch L1 events");
+    
+    // 2. Enrich events via L2
+    const l2Res = await fetch("/api/l2/enrich/batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(evData.events)
+    });
+    const enrichedEvents = await l2Res.json();
+    if (!l2Res.ok) throw new Error("Security Assessment could not be generated because Context Enrichment failed.");
+    
+    // 3. Evaluate via Part 2
+    const p2Res = await fetch("/api/part2/evaluate/batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(enrichedEvents)
+    });
+    const assessments = await p2Res.json();
+    if (!p2Res.ok) throw new Error("Security Assessment could not be generated because Rule/Risk Evaluation failed.");
+    
+    currentAssessmentResult = assessments;
+    return assessments;
+    
+  } finally {
+    $("#loading").querySelector("p").textContent = "Processing events locally...";
+    showLoading(false);
+  }
+}
+
+$("#view-assessment-btn").addEventListener("click", async () => {
+  try {
+    const assessments = await generateSecurityAssessment();
+    
+    if (Array.isArray(assessments) && assessments.length === 0) {
+      $("#assessment-preview").textContent = 
+`Security Assessment completed — no security alerts were generated for this dataset.
+
+L1 Normalization: Complete
+L2 Context Enrichment: Complete
+Rule Evaluation: Complete
+Security Assessment: No matching alerts`;
+    } else {
+      $("#assessment-preview").textContent = JSON.stringify(assessments, null, 2);
+    }
+    
+    $("#assessment-view").hidden = false;
+  } catch (err) {
+    showToast(err.message);
+  }
+});
+
+$("#close-assessment-btn").addEventListener("click", () => {
+  $("#assessment-view").hidden = true;
+});
+
+$("#download-assessment-btn").addEventListener("click", async () => {
+  try {
+    const assessments = await generateSecurityAssessment();
+    
+    const blob = new Blob([JSON.stringify(assessments, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = currentSessionId ? `security_assessment_${currentSessionId}.json` : "security_assessment.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    showToast(err.message);
+  }
+});
+
 $("#new-upload-btn").addEventListener("click", () => {
   currentSessionId = null;
+  currentAssessmentResult = null;
   pendingFiles = [];
   selectedSource = null;
   $("#file-input").value = "";
   $("#paste-input").value = "";
   $("#results-section").hidden = true;
   $("#events-view").hidden = true;
+  $("#assessment-view").hidden = true;
   $("#source-select").hidden = true;
   $("#selected-files-container").hidden = true;
   document.querySelectorAll(".btn-source").forEach((b) => b.classList.remove("selected"));

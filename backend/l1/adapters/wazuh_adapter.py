@@ -42,12 +42,27 @@ class WazuhAdapter(BaseLogAdapter):
         elif event.get("severity") is not None:
             severity = str(event["severity"])
 
-        event_type = (
-            rule.get("description")
-            or rule.get("groups", [None])[0] if isinstance(rule.get("groups"), list) else None
-            or event.get("decoder", {}).get("name") if isinstance(event.get("decoder"), dict) else None
-            or "wazuh_alert"
-        )
+        raw_description = rule.get("description") or ""
+        
+        # Taxonomy normalization
+        event_type = None
+        desc_lower = raw_description.lower()
+        
+        if "failed login" in desc_lower or "authentication failed" in desc_lower or "failed password" in desc_lower:
+            event_type = "authentication_failure"
+        elif "successful login" in desc_lower or "accepted password" in desc_lower:
+            event_type = "authentication_success"
+        elif "executed command as root" in desc_lower or "privilege escalation" in desc_lower:
+            event_type = "privilege_escalation"
+        elif "suspicious process" in desc_lower or "type=execve" in desc_lower:
+            event_type = "process_execution"
+        else:
+            event_type = (
+                raw_description
+                or (rule.get("groups", [None])[0] if isinstance(rule.get("groups"), list) else None)
+                or (event.get("decoder", {}).get("name") if isinstance(event.get("decoder"), dict) else None)
+                or "wazuh_alert"
+            )
 
         source_ip = data.get("srcip") or data.get("src_ip") or data.get("source_ip")
         dest_ip = data.get("dstip") or data.get("dst_ip") or data.get("destination_ip")
