@@ -1,0 +1,107 @@
+[
+  {
+    "timestamp": "2026-08-26T10:00:01Z",
+    "rule": {
+      "id": "5710",
+      "description": "sshd: Failed login for user admin",
+      "level": 8
+    },
+    "agent": {
+      "id": "001",
+      "name": "web-prod-01"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "srcport": "54321",
+      "dstip": "10.0.0.20",
+      "dstport": "22",
+      "protocol": "tcp",
+      "user": "admin"
+    },
+    "full_log": "Failed password for admin from 185.20.10.1 port 54321 ssh2"
+  },
+  {
+    "timestamp": "2026-08-26T10:00:05Z",
+    "rule": {
+      "id": "5710",
+      "description": "sshd: Failed login for user admin",
+      "level": 8
+    },
+    "agent": {
+      "id": "001",
+      "name": "web-prod-01"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "srcport": "54322",
+      "dstip": "10.0.0.20",
+      "dstport": "22",
+      "protocol": "tcp",
+      "user": "admin"
+    },
+    "full_log": "Failed password for admin from 185.20.10.1 port 54322 ssh2"
+  },
+  {
+    "timestamp": "2026-08-26T10:00:08Z",
+    "rule": {
+      "id": "5710",
+      "description": "sshd: Failed login for user admin",
+      "level": 8
+    },
+    "agent": {
+      "id": "001",
+      "name": "web-prod-01"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "srcport": "54323",
+      "dstip": "10.0.0.20",
+      "dstport": "22",
+      "protocol": "tcp",
+      "user": "admin"
+    },
+    "full_log": "Failed password for admin from 185.20.10.1 port 54323 ssh2"
+  },
+  {
+    "timestamp": "2026-08-26T10:00:12Z",
+    "rule": {
+      "id": "5710",
+      "description": "sshd: Failed login for user admin",
+      "level": 8
+    },
+    "agent": {
+      "id": "001",
+      "name": "web-prod-01"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "srcport": "54324",
+      "dstip": "10.0.0.20",
+      "dstport": "22",
+      "protocol": "tcp",
+      "user": "admin"
+    },
+    "full_log": "Failed password for admin from 185.20.10.1 port 54324 ssh2"
+  },
+  {
+    "timestamp": "2026-08-26T10:00:15Z",
+    "rule": {
+      "id": "5710",
+      "description": "sshd: Failed login for user admin",
+      "level": 8
+    },
+    "agent": {
+      "id": "001",
+      "name": "web-prod-01"
+    },
+    "data": {
+      "srcip": "185.20.10.1",
+      "srcport": "54325",
+      "dstip": "10.0.0.20",
+      "dstport": "22",
+      "protocol": "tcp",
+      "user": "admin"
+    },
+    "full_log": "Failed password for admin from 185.20.10.1 port 54325 ssh2"
+  }
+]
