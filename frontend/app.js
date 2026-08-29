@@ -449,6 +449,7 @@ function renderPipelineResult(result) {
   $("#analysis-json").hidden = true;
   $("#toggle-analysis-json-btn").textContent = "Show Raw JSON";
   $("#analysis-view").hidden = false;
+  $("#analysis-view").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 async function runFullPipeline() {
@@ -504,7 +505,12 @@ $("#close-analysis-btn").addEventListener("click", () => {
 $("#download-analysis-btn").addEventListener("click", async () => {
   try {
     await runFullPipeline();
-    window.open(`/api/pipeline/download/${currentSessionId}`, "_blank");
+    const link = document.createElement("a");
+    link.href = `/api/pipeline/download/${currentSessionId}`;
+    link.download = `final_analysis_${currentSessionId}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   } catch (err) {
     showToast(err.message);
   }
