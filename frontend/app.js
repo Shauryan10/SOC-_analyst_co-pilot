@@ -382,7 +382,7 @@ function renderFinalAssessment(item) {
       <strong>Alert:</strong> ${escapeHtml(assessment.alert_id)} |
       <strong>Severity:</strong> ${escapeHtml(alert.severity)} |
       <strong>Risk:</strong> ${escapeHtml(risk.score)}/100 (${escapeHtml(risk.level)}) |
-      <strong>LLM:</strong> ${escapeHtml(item.llm_status)} |
+      <strong>LLM:</strong> ${escapeHtml(item.llm_status)}${llm?.model_metadata?.model ? ` [${escapeHtml(llm.model_metadata.model)}]` : ""} |
       <strong>Judge:</strong> ${escapeHtml(validation.status)} |
       <strong>Status:</strong> ${escapeHtml(item.final_status)}
     </p>

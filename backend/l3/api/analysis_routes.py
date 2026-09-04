@@ -30,7 +30,12 @@ import time
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 
-from l3.config import OPENROUTER_MODEL, SCHEMA_VERSION
+from l3.config import (
+    OPENROUTER_FALLBACK_MODEL,
+    OPENROUTER_MODEL,
+    OPENROUTER_PRIMARY_MODEL,
+    SCHEMA_VERSION,
+)
 from l3.models.schemas import (
     FinalSecurityAssessment,
     SecurityAssessment,
@@ -177,6 +182,8 @@ async def health() -> JSONResponse:
             "schema_version": SCHEMA_VERSION,
             "openrouter": {
                 "configured": key_configured,
+                "primary_model": OPENROUTER_PRIMARY_MODEL,
+                "fallback_model": OPENROUTER_FALLBACK_MODEL,
                 "model": OPENROUTER_MODEL,
                 "base_url": OPENROUTER_BASE_URL,
                 # The key itself is NEVER returned
