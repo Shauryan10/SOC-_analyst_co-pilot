@@ -1,33 +1,32 @@
 # Cyber Defense Decision-Support Harness — Minor Prototype
 
-## End-to-End Flow
+## Embeddings (BGE-M3)
 
+`backend/embeddings/` turns security text into dense vectors. BGE-M3 is used
+because it runs locally (reproducible, no data leaves the host), is
+multilingual and long-context, and supports the dense + sparse retrieval the
+planned Qdrant stage needs. Nothing in the deterministic rule/risk/XAI pipeline
+imports it; it is additive.
+
+```python
+from embeddings import assessment_to_text, embed_text, embed_texts
+
+embed_text("Unauthorized privileged access was detected.")   # -> list[float], len 1024
+embed_texts([...])                                            # batched
+embed_text(assessment_to_text(part2_assessment))              # rule finding -> vector
 ```
-Upload (Wazuh / Suricata / Firewall)
-  ↓ L1        normalization           → NormalizedEvent[]
-  ↓ L2        enrichment + CTI + MITRE → ContextEnrichedEvent[]
-  ↓ Part 2    rule engine + risk engine → SecurityAssessment[]
-  ↓ L3        LLM + Judge + XAI        → FinalSecurityAssessment[]
-  ↓ Frontend
-```
 
-The UI uploads files to `/api/l1/upload` and then calls
-`POST /api/pipeline/analyze/{session_id}`, which runs L2 → Part 2 → L3 over the
-normalized events of that session and returns the per-stage counts, the Part 2
-assessments and the final L3 results.
+The model is loaded lazily on first use by the process-wide
+`get_embedding_service()` and reused afterwards (~12 s first load on CPU,
+sub-second per batch after). Configuration is environment driven — see
+`backend/embeddings/config.py`: `EMBEDDING_MODEL` (default `BAAI/bge-m3`),
+`EMBEDDING_DEVICE` (`auto` → CUDA when available, else CPU; force with `cpu` /
+`cuda`), `EMBEDDING_BATCH_SIZE`, `EMBEDDING_MAX_LENGTH`, `EMBEDDING_NORMALIZE`.
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/api/pipeline/analyze/{session_id}` | Run L2 → Part 2 → L3 for an L1 session |
-| GET | `/api/pipeline/result/{session_id}` | Last stored pipeline result |
-| GET | `/api/pipeline/download/{session_id}` | Download the pipeline result JSON |
+Validate the component with `cd backend && python -m embeddings.validate`.
 
-Query parameters on `analyze`: `run_llm` (default `true`) and `max_alerts`
-(default `20`).
-
-L3 reasoning requires `OPENROUTER_API_KEY` in the environment. Without it the
-pipeline still completes: `llm_status` is `unavailable` and the deterministic
-Part 2 risk plus the XAI explanation are returned unchanged.
+Next step: Qdrant will store these vectors and query them; the retrieval layer
+will depend on `embed_texts`, not on BGE-M3 directly.
 
 ## Module L1: Event Collection & Normalization
 
