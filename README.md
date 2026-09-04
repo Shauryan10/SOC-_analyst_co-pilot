@@ -27,29 +27,50 @@ Validate the component with `cd backend && python -m embeddings.validate`.
 
 ## Vector store (Qdrant)
 
-`backend/vectorstore/` stores the curated CTI knowledge base as BGE-M3 vectors
-and returns the context documents closest to a rule finding. It is still
-additive: the deterministic L1 → L2 → Part 2 → L3 pipeline does not call it,
-and no prompt/LLM wiring exists yet.
+`backend/vectorstore/` is the Qdrant layer: it stores cybersecurity knowledge
+chunks as BGE-M3 vectors and returns the ones closest to a rule finding. It
+never embeds anything itself — `backend/embeddings` stays the only embedding
+component. It is additive: the deterministic L1 → L2 → Part 2 → L3 pipeline
+does not call it, and no prompt/LLM wiring exists yet.
 
 ```python
-from vectorstore import cti_documents, get_context_store, retrieve_for_assessment
+from vectorstore import (
+    cti_documents, seed_documents, get_knowledge_store,
+    retrieve_for_assessment, retrieve_for_text,
+)
 
-get_context_store().index_documents(cti_documents())   # one-time / on refresh
-retrieve_for_assessment(part2_assessment)              # -> [{id, content, category, tags, score}]
+store = get_knowledge_store()
+store.create_collection()
+store.upsert_documents(seed_documents() + cti_documents())   # batch ingest
+
+retrieve_for_text("Unauthorized privileged access on a Linux system",
+                  filters={"platform": "Linux"})
+retrieve_for_assessment(part2_assessment)   # -> [{id, score, text, payload}]
 ```
 
-The documents come from `l2/kb/cti_knowledge_base.KNOWLEDGE_BASE`, so keyword
-retrieval (L2) and semantic retrieval share one source. Point IDs are
-`uuid5(doc_id)`, so re-indexing updates rather than duplicates. The collection
-is created on first use with BGE-M3's 1024 dimensions and cosine distance.
+Documents (`KnowledgeDocument`) carry `text` plus whatever is actually known:
+`source`, `title`, `section`, `category`, `technique_id`, `tactic`, `cve`,
+`cwe`, `rule_id`, `platform`, `severity`, `tags`, and free-form `metadata`.
+Any of those keys can be used as an optional `filters={...}` payload match;
+search works without filters. Point IDs are `uuid5(document_id)`, so
+re-ingesting a document updates it instead of duplicating it. The collection
+is created with the dimension reported by the embedding service (1024) and
+cosine distance; an existing collection with a different size is reported
+rather than written to. Failures — unreachable server, empty query,
+`top_k < 1`, empty document text — raise `VectorStoreError`.
 
-Config (`backend/vectorstore/config.py`): `QDRANT_URL` (default `:memory:`, an
-embedded instance — set `http://localhost:6333` for a server),
-`QDRANT_API_KEY`, `QDRANT_COLLECTION`, `QDRANT_TOP_K`,
+Two corpora ship with it: `seed_documents()` from
+`vectorstore/knowledge_config/seed_knowledge.json` and `cti_documents()`,
+which reuses `l2/kb/cti_knowledge_base.KNOWLEDGE_BASE` so keyword retrieval
+(L2) and semantic retrieval share one source.
+
+Config (`backend/vectorstore/config.py`): `QDRANT_URL`, or `QDRANT_HOST` +
+`QDRANT_PORT` (default `6333`); with neither set an embedded in-process
+instance is used, so no server is required. Also `QDRANT_API_KEY`,
+`QDRANT_COLLECTION` (default `cybersecurity_knowledge`), `QDRANT_TOP_K`,
 `QDRANT_SCORE_THRESHOLD`, `QDRANT_TIMEOUT`. Run a server with
 `docker run -p 6333:6333 qdrant/qdrant`, then check the layer with
-`cd backend && python -m vectorstore.validate`.
+`cd backend && QDRANT_HOST=localhost python -m vectorstore.validate`.
 
 ## Module L1: Event Collection & Normalization
 
