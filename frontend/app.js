@@ -382,7 +382,7 @@ function renderFinalAssessment(item) {
       <strong>Alert:</strong> ${escapeHtml(assessment.alert_id)} |
       <strong>Severity:</strong> ${escapeHtml(alert.severity)} |
       <strong>Risk:</strong> ${escapeHtml(risk.score)}/100 (${escapeHtml(risk.level)}) |
-      <strong>LLM:</strong> ${escapeHtml(item.llm_status)} |
+      <strong>LLM:</strong> ${escapeHtml(item.llm_status)}${llm?.model_metadata?.model ? ` [${escapeHtml(llm.model_metadata.model)}]` : ""} |
       <strong>Judge:</strong> ${escapeHtml(validation.status)} |
       <strong>Status:</strong> ${escapeHtml(item.final_status)}
     </p>
@@ -449,6 +449,7 @@ function renderPipelineResult(result) {
   $("#analysis-json").hidden = true;
   $("#toggle-analysis-json-btn").textContent = "Show Raw JSON";
   $("#analysis-view").hidden = false;
+  $("#analysis-view").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 async function runFullPipeline() {
@@ -504,7 +505,12 @@ $("#close-analysis-btn").addEventListener("click", () => {
 $("#download-analysis-btn").addEventListener("click", async () => {
   try {
     await runFullPipeline();
-    window.open(`/api/pipeline/download/${currentSessionId}`, "_blank");
+    const link = document.createElement("a");
+    link.href = `/api/pipeline/download/${currentSessionId}`;
+    link.download = `final_analysis_${currentSessionId}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   } catch (err) {
     showToast(err.message);
   }

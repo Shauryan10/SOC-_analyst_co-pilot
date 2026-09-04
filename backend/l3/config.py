@@ -11,6 +11,19 @@ Never hardcode secrets here.  Set the following in your shell or .env file:
 from __future__ import annotations
 
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# ---------------------------------------------------------------------------
+# Load environment variables from .env
+# ---------------------------------------------------------------------------
+
+_BACKEND_DIR = Path(__file__).resolve().parent.parent
+_ENV_FILE = _BACKEND_DIR / ".env"
+if _ENV_FILE.exists():
+    load_dotenv(dotenv_path=_ENV_FILE)
+else:
+    load_dotenv()
 
 # ---------------------------------------------------------------------------
 # OpenRouter settings
@@ -19,10 +32,20 @@ import os
 OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
 """Secret key — MUST be set in the environment, never committed to code."""
 
-OPENROUTER_MODEL: str = os.getenv(
-    "OPENROUTER_MODEL", "anthropic/claude-3-haiku"
+OPENROUTER_PRIMARY_MODEL: str = os.getenv(
+    "OPENROUTER_PRIMARY_MODEL",
+    os.getenv("OPENROUTER_MODEL", "deepseek/deepseek-v4-pro"),
 )
-"""Model identifier passed to the OpenRouter completions endpoint."""
+"""Primary model identifier for LLM reasoning."""
+
+OPENROUTER_FALLBACK_MODEL: str = os.getenv(
+    "OPENROUTER_FALLBACK_MODEL", "qwen/qwen-2.5-72b-instruct"
+)
+"""Fallback model identifier if primary model is unavailable or rate-limited."""
+
+# Backward compatibility alias
+OPENROUTER_MODEL: str = OPENROUTER_PRIMARY_MODEL
+"""Alias pointing to the primary model for backward compatibility."""
 
 OPENROUTER_TIMEOUT: int = int(os.getenv("OPENROUTER_TIMEOUT", "60"))
 """HTTP request timeout in seconds."""
@@ -31,6 +54,9 @@ OPENROUTER_BASE_URL: str = os.getenv(
     "OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"
 )
 """Base URL for the OpenRouter API."""
+
+LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
+"""Logging level for the application."""
 
 # ---------------------------------------------------------------------------
 # L3 schema / feature flags

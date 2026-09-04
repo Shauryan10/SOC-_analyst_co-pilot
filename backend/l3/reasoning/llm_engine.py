@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import uuid
 from datetime import datetime
 from typing import Any
@@ -177,21 +178,56 @@ class LLMEngine:
 
     @staticmethod
     def _extract_json(raw_text: str) -> dict[str, Any]:
-        """Extract a JSON object from the LLM's response text."""
+        """Extract a JSON object from the LLM's response text.
+
+        Handles:
+        - Direct JSON objects
+        - Markdown fenced JSON blocks (```json ... ``` or ``` ... ```) anywhere in text
+        - Stripping <think>...</think> reasoning tags
+        - Outermost JSON boundary detection
+        """
         text = raw_text.strip()
-        # Strip markdown code fences if present
-        if text.startswith("```"):
-            lines = text.splitlines()
-            text = "\n".join(
-                line for line in lines if not line.strip().startswith("```")
-            ).strip()
+
+        # 1. Strip reasoning/thinking tags (common in DeepSeek / reasoning models)
+        text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+
+        # 2. Check for markdown code fences anywhere in the text
+        code_fence_match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, flags=re.DOTALL)
+        if code_fence_match:
+            candidate = code_fence_match.group(1).strip()
+            try:
+                data = json.loads(candidate)
+                if isinstance(data, dict):
+                    return data
+            except json.JSONDecodeError:
+                pass
+
+        # 3. Try parsing text directly as JSON
         try:
             data = json.loads(text)
-            if not isinstance(data, dict):
+            if isinstance(data, dict):
+                return data
+        except json.JSONDecodeError:
+            pass
+
+        # 4. Fallback: locate outermost matching curly braces { ... }
+        first_brace = text.find("{")
+        last_brace = text.rfind("}")
+        if first_brace != -1 and last_brace > first_brace:
+            candidate = text[first_brace : last_brace + 1].strip()
+            try:
+                data = json.loads(candidate)
+                if isinstance(data, dict):
+                    return data
                 raise ValueError(f"Expected JSON object, got {type(data).__name__}")
-            return data
-        except json.JSONDecodeError as exc:
-            raise ValueError(f"LLM response is not valid JSON: {exc}\n---\n{text[:300]}") from exc
+            except json.JSONDecodeError as exc:
+                raise ValueError(
+                    f"LLM response contains invalid JSON: {exc}\n---\n{candidate[:300]}"
+                ) from exc
+
+        raise ValueError(
+            f"No JSON object found in LLM response:\n---\n{text[:300]}"
+        )
 
     @staticmethod
     def _coerce_uncertainty(value: Any) -> UncertaintyLevel:

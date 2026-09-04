@@ -357,32 +357,48 @@ def build_skipped_validation() -> ValidationResult:
 # ---------------------------------------------------------------------------
 
 
-def _collect_tokens(obj: Any, tokens: set[str]) -> None:
-    """Recursively extract all string leaf values for evidence matching."""
+def _collect_tokens(obj: Any, tokens: set[str] | None = None) -> set[str]:
+    """Recursively extract all string and scalar leaf values for evidence matching.
+
+    Safely handles dicts, lists, tuples, sets, strings, numbers, booleans, and None.
+    """
+    if tokens is None:
+        tokens = set()
+
     if isinstance(obj, dict):
         for v in obj.values():
             _collect_tokens(v, tokens)
-    elif isinstance(obj, list):
+    elif isinstance(obj, (list, tuple, set)):
         for item in obj:
             _collect_tokens(item, tokens)
-    elif isinstance(obj, str) and obj.strip():
-        tokens.add(obj.lower().strip())
+    elif isinstance(obj, (int, float, bool)):
+        tokens.add(str(obj).lower())
+    elif isinstance(obj, str):
+        stripped = obj.strip()
+        if stripped:
+            tokens.add(stripped.lower())
+
+    return tokens
 
 
 def _flatten_to_text(obj: Any) -> str:
-    """Flatten a nested object into a single string for substring search."""
+    """Flatten a nested object into a single string for substring search.
+
+    Safely handles dicts, lists, tuples, sets, strings, numbers, booleans, and None.
+    """
     parts: list[str] = []
-    _collect_tokens(obj, {})
 
     def collect(o: Any) -> None:
         if isinstance(o, dict):
             for v in o.values():
                 collect(v)
-        elif isinstance(o, list):
+        elif isinstance(o, (list, tuple, set)):
             for item in o:
                 collect(item)
         elif o is not None:
-            parts.append(str(o))
+            text = str(o).strip()
+            if text:
+                parts.append(text)
 
     collect(obj)
     return " ".join(parts)
