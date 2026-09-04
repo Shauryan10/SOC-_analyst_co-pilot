@@ -25,8 +25,31 @@ sub-second per batch after). Configuration is environment driven — see
 
 Validate the component with `cd backend && python -m embeddings.validate`.
 
-Next step: Qdrant will store these vectors and query them; the retrieval layer
-will depend on `embed_texts`, not on BGE-M3 directly.
+## Vector store (Qdrant)
+
+`backend/vectorstore/` stores the curated CTI knowledge base as BGE-M3 vectors
+and returns the context documents closest to a rule finding. It is still
+additive: the deterministic L1 → L2 → Part 2 → L3 pipeline does not call it,
+and no prompt/LLM wiring exists yet.
+
+```python
+from vectorstore import cti_documents, get_context_store, retrieve_for_assessment
+
+get_context_store().index_documents(cti_documents())   # one-time / on refresh
+retrieve_for_assessment(part2_assessment)              # -> [{id, content, category, tags, score}]
+```
+
+The documents come from `l2/kb/cti_knowledge_base.KNOWLEDGE_BASE`, so keyword
+retrieval (L2) and semantic retrieval share one source. Point IDs are
+`uuid5(doc_id)`, so re-indexing updates rather than duplicates. The collection
+is created on first use with BGE-M3's 1024 dimensions and cosine distance.
+
+Config (`backend/vectorstore/config.py`): `QDRANT_URL` (default `:memory:`, an
+embedded instance — set `http://localhost:6333` for a server),
+`QDRANT_API_KEY`, `QDRANT_COLLECTION`, `QDRANT_TOP_K`,
+`QDRANT_SCORE_THRESHOLD`, `QDRANT_TIMEOUT`. Run a server with
+`docker run -p 6333:6333 qdrant/qdrant`, then check the layer with
+`cd backend && python -m vectorstore.validate`.
 
 ## Module L1: Event Collection & Normalization
 
