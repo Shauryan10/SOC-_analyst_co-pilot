@@ -1,9 +1,9 @@
-"""Retrieval entrypoint used by the future LLM stage.
+"""Retrieval entrypoint for the future LLM stage.
 
-    SecurityAssessment -> assessment_to_text -> SecurityContextStore.search
+    SecurityAssessment -> assessment_to_text -> KnowledgeStore.search
 
-Nothing here builds prompts or calls an LLM; it only returns the context
-documents that a rule finding should be reasoned about with.
+Nothing here builds prompts or calls an LLM; it only returns the knowledge a
+rule finding should be reasoned about with.
 """
 
 from __future__ import annotations
@@ -13,26 +13,36 @@ from typing import Any
 from embeddings import alert_to_text, assessment_to_text
 from part2.models.security_alert import SecurityAlert
 from part2.models.security_assessment import SecurityAssessment
-from vectorstore.store import get_context_store
+from vectorstore.store import get_knowledge_store
 
 
-def retrieve_for_text(text: str, top_k: int | None = None) -> list[dict[str, Any]]:
-    """Context documents relevant to a free-form security text."""
+def retrieve_for_text(
+    text: str,
+    top_k: int | None = None,
+    filters: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Knowledge relevant to a free-form security query."""
 
-    return get_context_store().search(text, top_k=top_k)
+    return get_knowledge_store().search(text, top_k=top_k, filters=filters)
 
 
 def retrieve_for_alert(
-    alert: SecurityAlert, top_k: int | None = None
+    alert: SecurityAlert,
+    top_k: int | None = None,
+    filters: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
-    """Context documents relevant to a Part 2 rule finding."""
+    """Knowledge relevant to a Part 2 rule finding."""
 
-    return retrieve_for_text(alert_to_text(alert), top_k=top_k)
+    return retrieve_for_text(alert_to_text(alert), top_k=top_k, filters=filters)
 
 
 def retrieve_for_assessment(
-    assessment: SecurityAssessment, top_k: int | None = None
+    assessment: SecurityAssessment,
+    top_k: int | None = None,
+    filters: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
-    """Context documents relevant to a Part 2 security assessment."""
+    """Knowledge relevant to a Part 2 security assessment."""
 
-    return retrieve_for_text(assessment_to_text(assessment), top_k=top_k)
+    return retrieve_for_text(
+        assessment_to_text(assessment), top_k=top_k, filters=filters
+    )
