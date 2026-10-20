@@ -1,5 +1,11 @@
 # Cyber Defense Decision-Support Harness — Minor Prototype
 
+## Analyst dashboard
+
+The Next.js analyst dashboard lives in [`dashboard/`](dashboard/). See its
+[README](dashboard/README.md) for Node.js 20 setup, development, and production
+build instructions.
+
 ## Embeddings (BGE-M3)
 
 `backend/embeddings/` turns security text into dense vectors. BGE-M3 is used
