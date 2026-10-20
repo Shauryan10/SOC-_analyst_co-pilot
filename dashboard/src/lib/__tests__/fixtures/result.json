@@ -1,0 +1,718 @@
+{
+  "session_id": "fc78aac3e145",
+  "stages": {
+    "l1": {
+      "normalized_events": 18
+    },
+    "l2": {
+      "enriched_events": 18
+    },
+    "part2": {
+      "alerts": 8
+    },
+    "l3": {
+      "analyzed": 8,
+      "skipped": 0
+    }
+  },
+  "assessments": [
+    {
+      "alert": {
+        "alert_id": "ALT-7FFFC9A9B8C6",
+        "event_ids": [
+          "da1bc86f90c4b9de",
+          "b90dcfcd2def236d",
+          "1f2b28b8ad807457",
+          "2e6d535d9d1368e4",
+          "c7c03e706da7bcf0"
+        ],
+        "rule_id": "AUTH-001",
+        "rule_name": "Multiple Failed Authentication Attempts",
+        "severity": "high",
+        "confidence": 0.9,
+        "mitre_attack": {
+          "technique_id": "T1110",
+          "technique_name": "Brute Force"
+        },
+        "entities": {
+          "ips": [
+            "10.0.0.5",
+            "185.20.10.1"
+          ],
+          "domains": [],
+          "users": [
+            "admin"
+          ],
+          "hosts": [
+            "web-prod-01"
+          ],
+          "hashes": [],
+          "urls": [],
+          "ports": [
+            48992,
+            22
+          ]
+        },
+        "asset_context": {
+          "asset_id": "ASST-001",
+          "hostname": "web-prod-01",
+          "asset_type": "Server",
+          "environment": "Production",
+          "criticality": "High"
+        },
+        "user_context": {
+          "user_id": "U-0001",
+          "username": "admin",
+          "role": "System Administrator",
+          "privilege_level": "Root"
+        },
+        "threat_context": {
+          "ioc_matches": [
+            "185.20.10.1"
+          ],
+          "threat_family": "APT29",
+          "confidence": "High",
+          "supporting_evidence": [
+            "Known C2 IP observed in recent campaign"
+          ]
+        },
+        "evidence": [
+          {
+            "type": "event",
+            "event_id": "da1bc86f90c4b9de",
+            "timestamp": "2023-10-27T10:00:01Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          },
+          {
+            "type": "event",
+            "event_id": "b90dcfcd2def236d",
+            "timestamp": "2023-10-27T10:00:05Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:05 web-prod-01 sshd[1235]: Failed password for admin from 185.20.10.1 port 48995 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          },
+          {
+            "type": "event",
+            "event_id": "1f2b28b8ad807457",
+            "timestamp": "2023-10-27T10:00:08Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:08 web-prod-01 sshd[1236]: Failed password for admin from 185.20.10.1 port 48998 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          },
+          {
+            "type": "event",
+            "event_id": "2e6d535d9d1368e4",
+            "timestamp": "2023-10-27T10:00:12Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:12 web-prod-01 sshd[1237]: Failed password for admin from 185.20.10.1 port 49001 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          },
+          {
+            "type": "event",
+            "event_id": "c7c03e706da7bcf0",
+            "timestamp": "2023-10-27T10:00:15Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:15 web-prod-01 sshd[1238]: Failed password for admin from 185.20.10.1 port 49004 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          }
+        ],
+        "triggered_conditions": [
+          {
+            "type": "threshold",
+            "threshold": 5,
+            "matched_count": 5,
+            "window_minutes": 5,
+            "group_by": "event.source.ip",
+            "group_value": "185.20.10.1",
+            "first_event_timestamp": "2023-10-27T10:00:01Z",
+            "last_event_timestamp": "2023-10-27T10:00:15Z",
+            "conditions": [
+              {
+                "field": "event.event_type",
+                "operator": "equals",
+                "expected": "authentication_failure"
+              }
+            ]
+          }
+        ],
+        "timestamp": "2023-10-27T10:00:15Z",
+        "status": "new"
+      },
+      "risk": {
+        "score": 80.25,
+        "level": "critical",
+        "factors": [
+          {
+            "factor": "severity",
+            "value": 75.0,
+            "weight": 0.35,
+            "contribution": 26.25
+          },
+          {
+            "factor": "confidence",
+            "value": 90.0,
+            "weight": 0.2,
+            "contribution": 18.0
+          },
+          {
+            "factor": "asset_criticality",
+            "value": 75.0,
+            "weight": 0.2,
+            "contribution": 15.0
+          },
+          {
+            "factor": "user_privilege",
+            "value": 100.0,
+            "weight": 0.1,
+            "contribution": 10.0
+          },
+          {
+            "factor": "threat_context",
+            "value": 85.0,
+            "weight": 0.1,
+            "contribution": 8.5
+          },
+          {
+            "factor": "mitre_context",
+            "value": 50.0,
+            "weight": 0.05,
+            "contribution": 2.5
+          }
+        ],
+        "method": "deterministic_weighted"
+      },
+      "evidence": [
+        {
+          "type": "event",
+          "event_id": "da1bc86f90c4b9de",
+          "timestamp": "2023-10-27T10:00:01Z",
+          "event_type": "authentication_failure",
+          "severity": "7",
+          "message": "Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2",
+          "source_ip": "185.20.10.1",
+          "destination_ip": "10.0.0.5"
+        },
+        {
+          "type": "event",
+          "event_id": "b90dcfcd2def236d",
+          "timestamp": "2023-10-27T10:00:05Z",
+          "event_type": "authentication_failure",
+          "severity": "7",
+          "message": "Oct 27 10:00:05 web-prod-01 sshd[1235]: Failed password for admin from 185.20.10.1 port 48995 ssh2",
+          "source_ip": "185.20.10.1",
+          "destination_ip": "10.0.0.5"
+        },
+        {
+          "type": "event",
+          "event_id": "1f2b28b8ad807457",
+          "timestamp": "2023-10-27T10:00:08Z",
+          "event_type": "authentication_failure",
+          "severity": "7",
+          "message": "Oct 27 10:00:08 web-prod-01 sshd[1236]: Failed password for admin from 185.20.10.1 port 48998 ssh2",
+          "source_ip": "185.20.10.1",
+          "destination_ip": "10.0.0.5"
+        },
+        {
+          "type": "event",
+          "event_id": "2e6d535d9d1368e4",
+          "timestamp": "2023-10-27T10:00:12Z",
+          "event_type": "authentication_failure",
+          "severity": "7",
+          "message": "Oct 27 10:00:12 web-prod-01 sshd[1237]: Failed password for admin from 185.20.10.1 port 49001 ssh2",
+          "source_ip": "185.20.10.1",
+          "destination_ip": "10.0.0.5"
+        },
+        {
+          "type": "event",
+          "event_id": "c7c03e706da7bcf0",
+          "timestamp": "2023-10-27T10:00:15Z",
+          "event_type": "authentication_failure",
+          "severity": "7",
+          "message": "Oct 27 10:00:15 web-prod-01 sshd[1238]: Failed password for admin from 185.20.10.1 port 49004 ssh2",
+          "source_ip": "185.20.10.1",
+          "destination_ip": "10.0.0.5"
+        }
+      ],
+      "mitre_attack": {
+        "technique_id": "T1110",
+        "technique_name": "Brute Force"
+      },
+      "recommended_next_stage": "llm_reasoning",
+      "schema_version": "1.0"
+    },
+    {
+      "alert": {
+        "alert_id": "ALT-F3E5F3161B50",
+        "event_ids": [
+          "da1bc86f90c4b9de"
+        ],
+        "rule_id": "PRIV-001",
+        "rule_name": "Privileged User Suspicious Activity",
+        "severity": "high",
+        "confidence": 0.85,
+        "mitre_attack": {
+          "tactics": [
+            "Credential Access"
+          ],
+          "techniques": [
+            "T1110 - Brute Force"
+          ],
+          "confidence": 0.85,
+          "evidence": [
+            "Event contains authentication failure keywords indicating potential brute force."
+          ]
+        },
+        "entities": {
+          "ips": [
+            "10.0.0.5",
+            "185.20.10.1"
+          ],
+          "domains": [],
+          "users": [
+            "admin"
+          ],
+          "hosts": [
+            "web-prod-01"
+          ],
+          "hashes": [],
+          "urls": [],
+          "ports": [
+            48992,
+            22
+          ]
+        },
+        "asset_context": {
+          "asset_id": "ASST-001",
+          "hostname": "web-prod-01",
+          "asset_type": "Server",
+          "environment": "Production",
+          "criticality": "High"
+        },
+        "user_context": {
+          "user_id": "U-0001",
+          "username": "admin",
+          "role": "System Administrator",
+          "privilege_level": "Root"
+        },
+        "threat_context": {
+          "ioc_matches": [
+            "185.20.10.1"
+          ],
+          "threat_family": "APT29",
+          "confidence": "High",
+          "supporting_evidence": [
+            "Known C2 IP observed in recent campaign"
+          ]
+        },
+        "evidence": [
+          {
+            "type": "event",
+            "event_id": "da1bc86f90c4b9de",
+            "timestamp": "2023-10-27T10:00:01Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          }
+        ],
+        "triggered_conditions": [
+          {
+            "type": "condition",
+            "results": [
+              {
+                "field": "user_context.privilege_level",
+                "operator": "in",
+                "expected": [
+                  "privileged",
+                  "root",
+                  "domain_admin",
+                  "system",
+                  "admin",
+                  "administrator"
+                ],
+                "actual": "Root",
+                "matched": true
+              }
+            ]
+          }
+        ],
+        "timestamp": "2023-10-27T10:00:01Z",
+        "status": "new"
+      },
+      "risk": {
+        "score": 81.0,
+        "level": "critical",
+        "factors": [
+          {
+            "factor": "severity",
+            "value": 75.0,
+            "weight": 0.35,
+            "contribution": 26.25
+          },
+          {
+            "factor": "confidence",
+            "value": 85.0,
+            "weight": 0.2,
+            "contribution": 17.0
+          },
+          {
+            "factor": "asset_criticality",
+            "value": 75.0,
+            "weight": 0.2,
+            "contribution": 15.0
+          },
+          {
+            "factor": "user_privilege",
+            "value": 100.0,
+            "weight": 0.1,
+            "contribution": 10.0
+          },
+          {
+            "factor": "threat_context",
+            "value": 85.0,
+            "weight": 0.1,
+            "contribution": 8.5
+          },
+          {
+            "factor": "mitre_context",
+            "value": 85.0,
+            "weight": 0.05,
+            "contribution": 4.25
+          }
+        ],
+        "method": "deterministic_weighted"
+      },
+      "evidence": [
+        {
+          "type": "event",
+          "event_id": "da1bc86f90c4b9de",
+          "timestamp": "2023-10-27T10:00:01Z",
+          "event_type": "authentication_failure",
+          "severity": "7",
+          "message": "Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2",
+          "source_ip": "185.20.10.1",
+          "destination_ip": "10.0.0.5"
+        }
+      ],
+      "mitre_attack": {
+        "tactics": [
+          "Credential Access"
+        ],
+        "techniques": [
+          "T1110 - Brute Force"
+        ],
+        "confidence": 0.85,
+        "evidence": [
+          "Event contains authentication failure keywords indicating potential brute force."
+        ]
+      },
+      "recommended_next_stage": "llm_reasoning",
+      "schema_version": "1.0"
+    }
+  ],
+  "final_assessments": [
+    {
+      "security_assessment": {
+        "alert_id": "ALT-7FFFC9A9B8C6",
+        "alert": {
+          "rule_id": "AUTH-001",
+          "rule_name": "Multiple Failed Authentication Attempts",
+          "description": "count(event.source.ip) >= 5 within 5 minute(s) where event.event_type equals authentication_failure",
+          "severity": "high"
+        },
+        "triggering_rule": {
+          "id": "AUTH-001",
+          "name": "Multiple Failed Authentication Attempts",
+          "condition": "count(event.source.ip) >= 5 within 5 minute(s) where event.event_type equals authentication_failure",
+          "threshold": 5
+        },
+        "evidence": [
+          {
+            "type": "event",
+            "event_id": "da1bc86f90c4b9de",
+            "timestamp": "2023-10-27T10:00:01Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          },
+          {
+            "type": "event",
+            "event_id": "b90dcfcd2def236d",
+            "timestamp": "2023-10-27T10:00:05Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:05 web-prod-01 sshd[1235]: Failed password for admin from 185.20.10.1 port 48995 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          },
+          {
+            "type": "event",
+            "event_id": "1f2b28b8ad807457",
+            "timestamp": "2023-10-27T10:00:08Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:08 web-prod-01 sshd[1236]: Failed password for admin from 185.20.10.1 port 48998 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          },
+          {
+            "type": "event",
+            "event_id": "2e6d535d9d1368e4",
+            "timestamp": "2023-10-27T10:00:12Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:12 web-prod-01 sshd[1237]: Failed password for admin from 185.20.10.1 port 49001 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          },
+          {
+            "type": "event",
+            "event_id": "c7c03e706da7bcf0",
+            "timestamp": "2023-10-27T10:00:15Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:15 web-prod-01 sshd[1238]: Failed password for admin from 185.20.10.1 port 49004 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          }
+        ],
+        "event_context": {
+          "source_platform": "wazuh",
+          "event_type": "authentication_failure",
+          "source_ip": "185.20.10.1",
+          "destination_ip": "10.0.0.5",
+          "source_port": "48992",
+          "destination_port": "22",
+          "hostname": "web-prod-01",
+          "username": "admin",
+          "process_name": null,
+          "protocol": "TCP",
+          "action": "failed",
+          "message": "Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2"
+        },
+        "mitre": {
+          "tactic": "",
+          "technique_id": "T1110",
+          "technique_name": "Brute Force",
+          "sub_technique": null
+        },
+        "risk": {
+          "score": 80.25,
+          "level": "critical",
+          "factors": [
+            "severity: value=75.0, weight=0.35, contribution=26.25",
+            "confidence: value=90.0, weight=0.2, contribution=18.0",
+            "asset_criticality: value=75.0, weight=0.2, contribution=15.0",
+            "user_privilege: value=100.0, weight=0.1, contribution=10.0",
+            "threat_context: value=85.0, weight=0.1, contribution=8.5",
+            "mitre_context: value=50.0, weight=0.05, contribution=2.5"
+          ]
+        },
+        "retrieved_cti": [
+          {
+            "id": "KB-001",
+            "category": "threat_behavior",
+            "content": "APT29 is known to use compromised infrastructure and valid accounts to maintain persistence."
+          },
+          {
+            "id": "KB-002",
+            "category": "mitre_technique",
+            "content": "T1110 - Brute Force: Adversaries may use brute force techniques to attempt access to accounts when passwords are unknown."
+          },
+          {
+            "id": "KB-004",
+            "category": "ioc_context",
+            "content": "IP 185.20.10.1 is a known command and control (C2) server associated with multiple recent campaigns."
+          }
+        ],
+        "timestamp": "2023-10-27T10:00:15Z"
+      },
+      "llm_analysis": null,
+      "llm_status": "unavailable",
+      "validation": {
+        "status": "skipped",
+        "issues": [
+          "OPENROUTER_API_KEY is not set. Export the variable in your shell or .env file.",
+          "LLM was unavailable — no output to validate."
+        ],
+        "unsupported_claims": [],
+        "evidence_coverage": 0.0,
+        "checks_run": [],
+        "checks_passed": 0,
+        "checks_total": 0
+      },
+      "explanation": {
+        "why_alerted": "This alert was generated because rule 'Multiple Failed Authentication Attempts' matched the incoming event. The rule condition evaluated as: count(event.source.ip) >= 5 within 5 minute(s) where event.event_type equals authentication_failure. The configured detection threshold was: 5. Alert description: count(event.source.ip) >= 5 within 5 minute(s) where event.event_type equals authentication_failure.",
+        "why_risk": "The deterministic risk score is 80.2/100 (level: critical), calculated by PART 2 using the rule engine. The following factors contributed to this score: 'severity: value=75.0, weight=0.35, contribution=26.25'; 'confidence: value=90.0, weight=0.2, contribution=18.0'; 'asset_criticality: value=75.0, weight=0.2, contribution=15.0'; 'user_privilege: value=100.0, weight=0.1, contribution=10.0'; 'threat_context: value=85.0, weight=0.1, contribution=8.5'; 'mitre_context: value=50.0, weight=0.05, contribution=2.5'. This score is authoritative and has not been modified by the LLM reasoning layer.",
+        "supporting_factors": [
+          "Source IP observed: 185.20.10.1",
+          "Destination IP: 10.0.0.5",
+          "Network ports — source: 48992, destination: 22",
+          "Associated username: admin",
+          "Observed action: failed",
+          "Network protocol: TCP",
+          "Alert severity label: high",
+          "Risk factor: severity: value=75.0, weight=0.35, contribution=26.25",
+          "Risk factor: confidence: value=90.0, weight=0.2, contribution=18.0",
+          "Risk factor: asset_criticality: value=75.0, weight=0.2, contribution=15.0",
+          "Risk factor: user_privilege: value=100.0, weight=0.1, contribution=10.0",
+          "Risk factor: threat_context: value=85.0, weight=0.1, contribution=8.5",
+          "Risk factor: mitre_context: value=50.0, weight=0.05, contribution=2.5",
+          "5 structured evidence item(s) attached to this assessment."
+        ],
+        "context_influences": [
+          "Source platform: wazuh (event type: authentication_failure)",
+          "Originating host: web-prod-01",
+          "Raw log message preview: \"Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2\"",
+          "3 threat intelligence snippet(s) were retrieved and provided to the LLM for context."
+        ],
+        "uncertainty": "Uncertainty is MEDIUM. Only 5 evidence item(s) were available. Missing context fields: process name. Additional investigation is recommended.",
+        "mitre_context": "PART 2 mapped this alert to MITRE ATT&CK technique T1110 — Brute Force . The LLM reasoning was constrained to interpret only this mapping..",
+        "evidence_summary": "5 structured evidence item(s) from PART 2 were included in the LLM prompt. 3 threat intelligence snippet(s) were provided for context."
+      },
+      "final_status": "llm_unavailable",
+      "processing_timestamp": "2026-10-20T12:49:59.677062Z",
+      "schema_version": "1.0"
+    },
+    {
+      "security_assessment": {
+        "alert_id": "ALT-F3E5F3161B50",
+        "alert": {
+          "rule_id": "PRIV-001",
+          "rule_name": "Privileged User Suspicious Activity",
+          "description": "",
+          "severity": "high"
+        },
+        "triggering_rule": {
+          "id": "PRIV-001",
+          "name": "Privileged User Suspicious Activity",
+          "condition": "",
+          "threshold": null
+        },
+        "evidence": [
+          {
+            "type": "event",
+            "event_id": "da1bc86f90c4b9de",
+            "timestamp": "2023-10-27T10:00:01Z",
+            "event_type": "authentication_failure",
+            "severity": "7",
+            "message": "Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2",
+            "source_ip": "185.20.10.1",
+            "destination_ip": "10.0.0.5"
+          }
+        ],
+        "event_context": {
+          "source_platform": "wazuh",
+          "event_type": "authentication_failure",
+          "source_ip": "185.20.10.1",
+          "destination_ip": "10.0.0.5",
+          "source_port": "48992",
+          "destination_port": "22",
+          "hostname": "web-prod-01",
+          "username": "admin",
+          "process_name": null,
+          "protocol": "TCP",
+          "action": "failed",
+          "message": "Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2"
+        },
+        "mitre": {
+          "tactic": "Credential Access",
+          "technique_id": "T1110",
+          "technique_name": "Brute Force",
+          "sub_technique": null
+        },
+        "risk": {
+          "score": 81.0,
+          "level": "critical",
+          "factors": [
+            "severity: value=75.0, weight=0.35, contribution=26.25",
+            "confidence: value=85.0, weight=0.2, contribution=17.0",
+            "asset_criticality: value=75.0, weight=0.2, contribution=15.0",
+            "user_privilege: value=100.0, weight=0.1, contribution=10.0",
+            "threat_context: value=85.0, weight=0.1, contribution=8.5",
+            "mitre_context: value=85.0, weight=0.05, contribution=4.25"
+          ]
+        },
+        "retrieved_cti": [
+          {
+            "id": "KB-001",
+            "category": "threat_behavior",
+            "content": "APT29 is known to use compromised infrastructure and valid accounts to maintain persistence."
+          },
+          {
+            "id": "KB-002",
+            "category": "mitre_technique",
+            "content": "T1110 - Brute Force: Adversaries may use brute force techniques to attempt access to accounts when passwords are unknown."
+          },
+          {
+            "id": "KB-004",
+            "category": "ioc_context",
+            "content": "IP 185.20.10.1 is a known command and control (C2) server associated with multiple recent campaigns."
+          }
+        ],
+        "timestamp": "2023-10-27T10:00:01Z"
+      },
+      "llm_analysis": null,
+      "llm_status": "unavailable",
+      "validation": {
+        "status": "skipped",
+        "issues": [
+          "OPENROUTER_API_KEY is not set. Export the variable in your shell or .env file.",
+          "LLM was unavailable — no output to validate."
+        ],
+        "unsupported_claims": [],
+        "evidence_coverage": 0.0,
+        "checks_run": [],
+        "checks_passed": 0,
+        "checks_total": 0
+      },
+      "explanation": {
+        "why_alerted": "This alert was generated because rule 'Privileged User Suspicious Activity' matched the incoming event.",
+        "why_risk": "The deterministic risk score is 81.0/100 (level: critical), calculated by PART 2 using the rule engine. The following factors contributed to this score: 'severity: value=75.0, weight=0.35, contribution=26.25'; 'confidence: value=85.0, weight=0.2, contribution=17.0'; 'asset_criticality: value=75.0, weight=0.2, contribution=15.0'; 'user_privilege: value=100.0, weight=0.1, contribution=10.0'; 'threat_context: value=85.0, weight=0.1, contribution=8.5'; 'mitre_context: value=85.0, weight=0.05, contribution=4.25'. This score is authoritative and has not been modified by the LLM reasoning layer.",
+        "supporting_factors": [
+          "Source IP observed: 185.20.10.1",
+          "Destination IP: 10.0.0.5",
+          "Network ports — source: 48992, destination: 22",
+          "Associated username: admin",
+          "Observed action: failed",
+          "Network protocol: TCP",
+          "Alert severity label: high",
+          "Risk factor: severity: value=75.0, weight=0.35, contribution=26.25",
+          "Risk factor: confidence: value=85.0, weight=0.2, contribution=17.0",
+          "Risk factor: asset_criticality: value=75.0, weight=0.2, contribution=15.0",
+          "Risk factor: user_privilege: value=100.0, weight=0.1, contribution=10.0",
+          "Risk factor: threat_context: value=85.0, weight=0.1, contribution=8.5",
+          "Risk factor: mitre_context: value=85.0, weight=0.05, contribution=4.25",
+          "1 structured evidence item(s) attached to this assessment."
+        ],
+        "context_influences": [
+          "Source platform: wazuh (event type: authentication_failure)",
+          "Originating host: web-prod-01",
+          "Raw log message preview: \"Oct 27 10:00:01 web-prod-01 sshd[1234]: Failed password for admin from 185.20.10.1 port 48992 ssh2\"",
+          "3 threat intelligence snippet(s) were retrieved and provided to the LLM for context."
+        ],
+        "uncertainty": "Uncertainty is MEDIUM. Only 1 evidence item(s) were available. Missing context fields: process name. Additional investigation is recommended.",
+        "mitre_context": "PART 2 mapped this alert to MITRE ATT&CK technique T1110 — Brute Force under the 'Credential Access' tactic . The LLM reasoning was constrained to interpret only this mapping..",
+        "evidence_summary": "1 structured evidence item(s) from PART 2 were included in the LLM prompt. 3 threat intelligence snippet(s) were provided for context."
+      },
+      "final_status": "llm_unavailable",
+      "processing_timestamp": "2026-10-20T12:49:59.677242Z",
+      "schema_version": "1.0"
+    }
+  ]
+}

@@ -37,18 +37,38 @@ app.include_router(l3_router)
 app.include_router(pipeline_router)
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
+DASHBOARD_OUT_DIR = Path(__file__).resolve().parent.parent / "dashboard" / "out"
 if FRONTEND_DIR.exists():
     app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
 
 
 @app.get("/")
 async def root():
+    if DASHBOARD_OUT_DIR.exists():
+        return FileResponse(DASHBOARD_OUT_DIR / "index.html")
+
     index = FRONTEND_DIR / "index.html"
     if index.exists():
         return FileResponse(index)
     return {"message": "L1 API running. Place frontend at backend/../frontend/index.html"}
 
 
+@app.api_route("/legacy", methods=["GET", "HEAD"])
+async def legacy():
+    index = FRONTEND_DIR / "index.html"
+    if index.exists():
+        return FileResponse(index)
+    return {"message": "Frontend is not available"}
+
+
 @app.get("/health")
 async def health():
     return {"status": "ok", "modules": ["L1", "L2", "Part2", "L3"]}
+
+
+if DASHBOARD_OUT_DIR.exists():
+    app.mount(
+        "/",
+        StaticFiles(directory=DASHBOARD_OUT_DIR, html=True),
+        name="dashboard",
+    )

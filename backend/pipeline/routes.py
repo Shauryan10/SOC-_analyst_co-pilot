@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
@@ -45,6 +46,67 @@ def _result_path(session_id: str) -> Path:
     if not SESSION_ID_PATTERN.match(session_id):
         raise HTTPException(status_code=400, detail="Invalid session id")
     return l1_pipeline.output_dir / session_id / RESULT_FILENAME
+
+
+@router.get("/results")
+async def list_results() -> JSONResponse:
+    """Return stored pipeline results, newest first."""
+
+    results = []
+    try:
+        session_dirs = l1_pipeline.output_dir.iterdir()
+        for session_dir in session_dirs:
+            session_id = session_dir.name
+            if not session_dir.is_dir() or not SESSION_ID_PATTERN.fullmatch(session_id):
+                continue
+
+            result_path = session_dir / RESULT_FILENAME
+            try:
+                modified_at = result_path.stat().st_mtime
+                with open(result_path, encoding="utf-8") as handle:
+                    result = json.load(handle)
+            except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+                continue
+
+            if not isinstance(result, dict):
+                continue
+
+            sources = []
+            report_path = l1_pipeline.get_session_output(session_id, "report")
+            if report_path:
+                try:
+                    with open(report_path, encoding="utf-8") as handle:
+                        report = json.load(handle)
+                    files = report.get("files", []) if isinstance(report, dict) else []
+                    sources = [
+                        {
+                            "filename": file.get("filename"),
+                            "source_detected": file.get("source_detected"),
+                        }
+                        for file in files
+                        if isinstance(file, dict)
+                    ]
+                except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+                    sources = []
+
+            results.append(
+                (
+                    modified_at,
+                    {
+                        "session_id": session_id,
+                        "analyzed_at": datetime.fromtimestamp(
+                            modified_at, tz=timezone.utc
+                        ).isoformat().replace("+00:00", "Z"),
+                        "stages": result.get("stages", {}),
+                        "sources": sources,
+                    },
+                )
+            )
+    except OSError:
+        return JSONResponse([])
+
+    results.sort(key=lambda item: item[0], reverse=True)
+    return JSONResponse([result for _, result in results])
 
 
 @router.post("/analyze/{session_id}")
